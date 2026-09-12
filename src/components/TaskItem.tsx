@@ -14,6 +14,12 @@ export function TaskItem({ task, onDelete, onToggle, onEdit }: TaskItemProps) {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showUpdateModal, setShowUpdateModal] = useState(false);
 
+    const priorityLabel: Record<string, string> = {
+        high: 'Высокий',
+        normal: 'Обычный',
+        low: 'Низкий'
+    };
+
     const formatDate = (date: Date) => {
         if (!date || isNaN(new Date(date).getTime())) {
             return 'Дата не указана';
@@ -38,13 +44,13 @@ export function TaskItem({ task, onDelete, onToggle, onEdit }: TaskItemProps) {
     };
 
     return (
-        <div className="task-item">
+        <div className={`task-item task-item--${task.important}${task.done ? ' task-item--done' : ''}`}>
             <div className="task-item__content">
                 <div className="task-item__header">
                     <input type="checkbox" checked={task.done} onChange={() => onToggle(task.id)} className="task-item__checkbox"/>
-                    <span className="task-item__text">
-                        {task.text}
-                        <span className="task-item__priority">({task.important})</span>
+                    <span className="task-item__text">{task.text}</span>
+                    <span className={`task-item__priority task-item__priority--${task.important}`}>
+                        {priorityLabel[task.important] ?? task.important}
                     </span>
                 </div>
                 <div className="task-item__dates">
@@ -61,8 +67,8 @@ export function TaskItem({ task, onDelete, onToggle, onEdit }: TaskItemProps) {
                     Удалить
                 </button>
             </div>
-            {showDeleteModal && (<DeleteTask taskId={task.id} taskText={task.text} onDelete={handleDelete}/>)}
-            {showUpdateModal && (<UpdateTask task={task} onUpdate={handleUpdate}/>)}
+            {showDeleteModal && (<DeleteTask taskId={task.id} taskText={task.text} onDelete={handleDelete} onCancel={() => setShowDeleteModal(false)}/>)}
+            {showUpdateModal && (<UpdateTask task={task} onUpdate={handleUpdate} onCancel={() => setShowUpdateModal(false)}/>)}
         </div>
     );
 }

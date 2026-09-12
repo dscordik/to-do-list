@@ -3,10 +3,11 @@ import { Task } from '../types/types';
 
 type UpdateTaskProps = {
     task: Task,
-    onUpdate: (newText: string, newDeadline: Date, newImportant: string) => void
+    onUpdate: (newText: string, newDeadline: Date, newImportant: string) => void,
+    onCancel: () => void
 }
 
-export function UpdateTask({task, onUpdate}: UpdateTaskProps) {
+export function UpdateTask({task, onUpdate, onCancel}: UpdateTaskProps) {
     const [text, setText] = useState(task.text)
     const [deadline, setDeadline] = useState(
         task.deadline ? task.deadline.toISOString().slice(0,16) : '')
@@ -17,8 +18,8 @@ export function UpdateTask({task, onUpdate}: UpdateTaskProps) {
     }
 
     return(
-        <div className="update-task__overlay">
-            <div className="update-task__modal">
+        <div className="update-task__overlay" onClick={onCancel}>
+            <div className="update-task__modal" onClick={e => e.stopPropagation()}>
                 <h3 className="update-task__title">Редактировать задачу</h3>
                 <div className="update-task__field">
                     <label className="update-task__label">Текст задачи:</label>
@@ -37,6 +38,7 @@ export function UpdateTask({task, onUpdate}: UpdateTaskProps) {
                     </select>
                 </div>
                 <div className="update-task__actions">
+                    <button className="update-task__btn update-task__btn--cancel" onClick={onCancel}>Отмена</button>
                     <button className="update-task__btn update-task__btn--save" onClick={handleSubmit}>Сохранить</button>
                 </div>
             </div>

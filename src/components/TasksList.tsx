@@ -11,7 +11,7 @@ type TasksListProps = {
 
 export function TaskList({tasks,onToggle,onEdit,onDelete}:TasksListProps) {
     if (tasks.length === 0) {
-        return <div>Задач нет</div>
+        return <div className="tasks-list__empty">Задач нет — добавьте первую выше</div>
     }
     return (
         <div className="tasks-list">
